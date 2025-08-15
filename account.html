@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Account - Next Level Live Stream</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-top: #4e61ff;
+      --bg-bottom: #1c1e55;
+      --muted: #d6dffb;
+      --accent: #8fd0ff;
+      --card-bg: rgba(255,255,255,0.06);
+      --radius-2xl: 28px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; background:#111;}
+    body{
+      font-family: 'Caveat', system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
+      color:var(--muted);
+      display:flex; justify-content:center;
+    }
+    .phone{
+      width: 440px;
+      max-width:100%;
+      min-height:100vh;
+      background: radial-gradient(1400px 600px at 50% -10%, var(--bg-top), var(--bg-bottom) 60%) fixed;
+      position:relative; overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:20px;
+    }
+    .top-curved{
+      height:96px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border-bottom-left-radius:30px;
+      border-bottom-right-radius:30px;
+      padding:6px 20px;
+      display:flex; align-items:center;
+    }
+    nav{
+      display:flex; gap:12px; width:412.83px;
+      justify-content:space-between; align-items:center;
+      color:var(--muted);
+      font-size:13px; font-weight:600;
+    }
+    nav a{ color:var(--muted); text-decoration:none; }
+    nav a.active{ color:var(--accent) }
+    .section-wrap{
+      display:flex; justify-content:center; margin-top:30px;
+    }
+    .section{
+      width:381px;
+      background: var(--card-bg);
+      padding:22px;
+      border-radius:var(--radius-2xl);
+      box-shadow:0 18px 38px rgba(0,0,0,0.5);
+      text-align:center;
+    }
+    h2{ font-size:26px; color:var(--accent); margin-bottom:15px; }
+    p{ font-size:18px; margin-bottom:20px; }
+    button{
+      padding:10px 20px;
+      background: var(--accent);
+      color:#000;
+      font-weight:700;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:16px;
+    }
+    button:hover{
+      background:#fff;
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <div class="top-curved">
+      <nav>
+        <a href="index.html">home</a>
+        <a href="#">live<br>stream</a>
+        <a href="creator.html">creator</a>
+        <a href="account.html" class="active">account</a>
+      </nav>
+    </div>
+
+    <div class="section-wrap">
+      <section class="section">
+        <h2>My Account</h2>
+        <p id="userEmail">Loading...</p>
+        <button id="logoutBtn">Logout</button>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const email = localStorage.getItem("loggedInUser");
+    const userEmailEl = document.getElementById("userEmail");
+
+    if (!email) {
+      // No user found → send to login
+      window.location.href = "login.html";
+    } else {
+      userEmailEl.textContent = "Logged in as: " + email;
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

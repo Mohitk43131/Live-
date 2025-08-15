@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Creator Account - Next Level Live Stream</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-top: #4e61ff;
+      --bg-bottom: #1c1e55;
+      --muted: #d6dffb;
+      --accent: #8fd0ff;
+      --card-bg: rgba(255,255,255,0.06);
+      --radius-2xl: 28px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; background:#111;}
+    body{
+      font-family: 'Caveat', system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
+      color:var(--muted);
+      display:flex; justify-content:center;
+    }
+    .phone{
+      width: 440px;
+      max-width:100%;
+      min-height:100vh;
+      background: radial-gradient(1400px 600px at 50% -10%, var(--bg-top), var(--bg-bottom) 60%) fixed;
+      position:relative; overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:20px;
+    }
+    .top-curved{
+      height:96px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border-bottom-left-radius:30px;
+      border-bottom-right-radius:30px;
+      padding:6px 20px;
+      display:flex; align-items:center;
+    }
+    nav{
+      display:flex; gap:12px; width:412.83px;
+      justify-content:space-between; align-items:center;
+      color:var(--muted);
+      font-size:13px; font-weight:600;
+    }
+    nav a{ color:var(--muted); text-decoration:none; }
+    nav a.active{ color:var(--accent) }
+    .section-wrap{
+      display:flex; justify-content:center; margin-top:30px;
+    }
+    .section{
+      width:381px;
+      background: var(--card-bg);
+      padding:22px;
+      border-radius:var(--radius-2xl);
+      box-shadow:0 18px 38px rgba(0,0,0,0.5);
+    }
+    h2{ font-size:26px; color:var(--accent); margin-bottom:15px; }
+    label{ display:block; margin-bottom:6px; font-size:16px; }
+    input{
+      width:100%;
+      padding:10px;
+      margin-bottom:15px;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+    }
+    button{
+      padding:10px 20px;
+      background: var(--accent);
+      color:#000;
+      font-weight:700;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:16px;
+    }
+    button:hover{
+      background:#fff;
+    }
+    .creator-options button{
+      display:block;
+      width:100%;
+      margin-bottom:15px;
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <div class="top-curved">
+      <nav>
+        <a href="index.html">home</a>
+        <a href="#">live<br>stream</a>
+        <a href="creator.html" class="active">creator</a>
+        <a href="account.html">account</a>
+      </nav>
+    </div>
+
+    <div class="section-wrap">
+      <section class="section" id="creatorSection">
+        <!-- Filled by JavaScript -->
+      </section>
+    </div>
+  </main>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA45woJ-QeDGpk7KkS_jkSaXuBTnqkzcQ8",
+      authDomain: "next-streaming-645b2.firebaseapp.com",
+      projectId: "next-streaming-645b2",
+      storageBucket: "next-streaming-645b2.appspot.com",
+      messagingSenderId: "353530200083",
+      appId: "1:353530200083:web:f82a1534b65ac4bbe5ffe6",
+      measurementId: "G-CKWY5HNE8W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    const loggedInEmail = localStorage.getItem("loggedInUser");
+    const section = document.getElementById("creatorSection");
+
+    if (!loggedInEmail) {
+      window.location.href = "login.html";
+    }
+
+    const creatorData = JSON.parse(localStorage.getItem("creatorAccounts") || "{}");
+
+    if (creatorData[loggedInEmail]) {
+      section.innerHTML = `
+        <h2>Welcome, ${creatorData[loggedInEmail].name}</h2>
+        <div class="creator-options">
+          <button onclick="window.location.href='upload.html'">Upload Video</button>
+          <button onclick="window.location.href='live.html'">Start Live Stream</button>
+        </div>
+      `;
+    } else {
+      section.innerHTML = `
+        <h2>Create Creator Account</h2>
+        <form id="creatorForm">
+          <label>Email</label>
+          <input type="email" value="${loggedInEmail}" readonly />
+          <label>Name</label>
+          <input type="text" id="creatorName" required />
+          <label>Username</label>
+          <input type="text" id="creatorUsername" required />
+          <button type="submit">Create Account</button>
+        </form>
+      `;
+
+      document.getElementById("creatorForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("creatorName").value.trim();
+        const username = document.getElementById("creatorUsername").value.trim();
+
+        if (!name || !username) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        creatorData[loggedInEmail] = { name, username };
+        localStorage.setItem("creatorAccounts", JSON.stringify(creatorData));
+        alert("Creator account created successfully!");
+        location.reload();
+      });
+    }
+  </script>
+</body>
+</html>
